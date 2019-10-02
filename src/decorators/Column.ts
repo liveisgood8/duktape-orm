@@ -1,4 +1,4 @@
-import { getColumnsStorage } from "../storages/GlobalStorage"
+import { getColumnsStorage } from "../storages/GlobalStorage";
 import { ColumnInfo } from "../entities/ColumnInfo";
 
 

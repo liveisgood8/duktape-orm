@@ -1,4 +1,4 @@
-import {ColumnInfo} from "./ColumnInfo"
+import {ColumnInfo} from "./ColumnInfo";
 
 
 export interface EntityColumnsInfo {
@@ -7,7 +7,7 @@ export interface EntityColumnsInfo {
     columnDefinition: ColumnInfo
 }
 
-export interface EntityTableInfo {
+export interface EntityInfo {
     target: Function,
     table: string;
 }

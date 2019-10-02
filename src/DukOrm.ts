@@ -1,3 +1,3 @@
 export * from "./decorators/Column"
 export * from "./decorators/Entity"
-export * from "./query-builder/QueryBuilder"
+export * from "./entity-manager/EntityManager"

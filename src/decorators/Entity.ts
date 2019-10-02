@@ -1,4 +1,4 @@
-import { getEntityStorage } from "../storages/GlobalStorage"
+import { getEntityStorage } from "../storages/GlobalStorage";
 
 
 export function Entity(table: string) {

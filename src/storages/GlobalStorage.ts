@@ -1,4 +1,4 @@
-import {EntityColumnsInfo, EntityTableInfo} from "../entities/EntityInfo"
+import {EntityColumnsInfo, EntityInfo} from "../entities/EntityInfo";
 
 // For duktape
 if (typeof globalThis === 'undefined') {
@@ -14,12 +14,12 @@ if (typeof globalThis === 'undefined') {
 }
 
 (globalThis as any).columnsStorage = new Array<EntityColumnsInfo>();
-(globalThis as any).entityStorage = new Array<EntityTableInfo>();
+(globalThis as any).entityStorage = new Array<EntityInfo>();
 
 export function getColumnsStorage(): Array<EntityColumnsInfo> {
     return (globalThis as any).columnsStorage;
 }
 
-export function getEntityStorage(): Array<EntityTableInfo> {
+export function getEntityStorage(): Array<EntityInfo> {
     return (globalThis as any).entityStorage;
 }
