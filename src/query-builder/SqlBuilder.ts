@@ -11,6 +11,10 @@ export function generateInsert(fields: string[], table: string): string {
     return `insert into ${table} (${fields.join(',')}) values (${createPlaceholders(fields.length)})`;
 }
 
+export function generateCheckExist(table: string, whereLimitation: string) {
+    return `select count(*) from ${table} where ${whereLimitation}`;
+}
+
 /**
  * Create placeholders list for native query, look like ?, ?, ?, ...(length)
  * @param length Length of placeholders list

@@ -4,7 +4,6 @@ import * as SqlGenerator from "../query-builder/SqlBuilder";
 import { EntityInfo, EntityColumnsInfo } from "../entities/EntityInfo";
 import { DukConnection } from "../native-database/DukConnection";
 
-
 export class EntityManager<T> {
     private entityCtor: Function;
     private entityInfo: EntityInfo;
@@ -83,8 +82,8 @@ export class EntityManager<T> {
     }
 
     insert(obj: T): boolean {
-        let fields = new Array<string>();
-        let args = new Array<any>();
+        let fields = [];
+        let args = [];
         for (var prop in obj) {
             let dbColumn = this.entityColumns.filter(e => e.property === prop)[0];
             fields.push(dbColumn.columnDefinition.name);
@@ -95,5 +94,23 @@ export class EntityManager<T> {
 
         const db = new DukConnection();
         return db.execute(sql, args);
+    }
+
+    isExist(obj: any): boolean {
+        let fields = [];
+        let args = [];
+        let whereLimitaion = ""
+        for (var prop in obj) {
+            let dbColumn = this.entityColumns.filter(e => e.property === prop)[0];
+            whereLimitaion += `${dbColumn.columnDefinition.name}=?`;
+            fields.push(dbColumn.columnDefinition.name);
+            args.push(obj[prop]);
+        }
+
+        let sql = SqlGenerator.generateCheckExist(this.entityInfo.table, whereLimitaion);
+
+        const db = new DukConnection();
+        let result = db.select(sql, args);
+        return result[0][0] !== 0;
     }
 }
