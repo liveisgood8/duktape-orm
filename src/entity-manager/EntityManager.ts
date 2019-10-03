@@ -1,5 +1,4 @@
 /// <reference path="../dukmodules.d.ts"/>
-
 import * as GlobalStorage from "../storages/GlobalStorage";
 import * as SqlGenerator from "../query-builder/SqlBuilder";
 import { EntityInfo, EntityColumnsInfo } from "../entities/EntityInfo";
