@@ -8,10 +8,12 @@ import { DukConnection } from "../native-database/DukConnection";
 export class EntityManager<T> {
     private entityCtor: Function;
     private entityInfo: EntityInfo;
-    private entityColumns: Array<EntityColumnsInfo>;
+    private entityColumns: EntityColumnsInfo[];
 
-    constructor(entityConstructor: new () => T) {
-        this.setEntity(entityConstructor);
+    constructor(entityConstructor?: new () => T) {
+        if (entityConstructor) {
+            this.setEntity(entityConstructor);
+        }
     }
 
     setEntity(entityConstructor: Function): EntityManager<T> {
@@ -29,7 +31,15 @@ export class EntityManager<T> {
         return this;
     }
 
-    select(whereCallback?: (obj: T) => void): Array<T> | null {
+    select(whereCallback?: (obj: T) => void): T[] | null {
+        return this.selectPrivate(this.entityColumns, whereCallback);
+    }
+
+    selectSome(objectKeys: string[], whereCallback?: (obj: T) => void): T[] | null {
+        return this.selectPrivate(this.entityColumns.filter(e => objectKeys.indexOf(e.property) !== -1), whereCallback);
+    }
+
+    private selectPrivate(eColumns: EntityColumnsInfo[], whereCallback?: (obj: T) => void): T[] | null {
         let whereLimitation = "";
         let args = new Array<any>();
         if (whereCallback) {
@@ -37,18 +47,17 @@ export class EntityManager<T> {
             whereCallback(obj);
 
             for (var prop in obj) {
-                let dbColumn = this.entityColumns.filter(e => e.property === prop)[0]; 
+                let dbColumn = eColumns.filter(e => e.property === prop)[0]; 
                 whereLimitation += `${dbColumn.columnDefinition.name}=?`;
                 args.push(obj[prop]);
             }
         }
         
-        let selectingColumns = this.entityColumns.map(e => e.columnDefinition.name);
+        let selectingColumns = eColumns.map(e => e.columnDefinition.name);
         let sql = SqlGenerator.generateSelect(selectingColumns, 
                                             this.entityInfo.table, 
                                             whereLimitation);
-        print(sql);
-        
+
         const db = new DukConnection();
         let result = db.select(sql, args);
 

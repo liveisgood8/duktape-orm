@@ -150,82 +150,33 @@ declare class Query {
     setDate(index: number, value: number): boolean;
     //#endregion
 }
+declare namespace Fs {
+    type OpenFileMode = number;
+
+    /** Режим записи */
+    const WRITE_MODE: OpenFileMode;
+    /** Режим чтения */
+    const READ_MODE: OpenFileMode;
+    /** Режим дополнения */
+    const APPEND_MODE: OpenFileMode;
+}
+
+declare class File {
+    constructor(name: string, mode: Fs.OpenFileMode)
+
+    eof: boolean;
+    readLine(): string;
+    readAll(): string;
+    write(text: string): void;
+    close(): void;
+}
 declare namespace MsgBox {
     function show(text: string, title: string): void;
 }
 declare function print(...value: any): void;
-declare interface CR {
-    num_rec: number;
-    num_lab: number;
-    numbr: number;
-    num_mpr: number;
-    // public equipmentName: string;
-//   public calibrationEquipmentId: number = null;
-//   public equipmentBrand: string = null;
-//   public equipmentFactoryNumber: string = null;
-//   public equipmentInventoryNumber: string = null;
-//   public equipmentState: string = null;
-    xoConsider: boolean;
-    inUse: boolean;
-    x0: boolean;
-    a_znac: boolean;
-    isLin: boolean;
-//   public cuvette: string = null;
-//   public date: Date = new Date();
-//   public worker: string = null;
-//   public inUse = false;
-//   public addition: string = null;
-//   public function = 0;
-//   // public firstSoluteId: number = null;
-//   // public secondSoluteId: number = null;
-//   public unit: string = null;
-//   // public buildPeriodValue: number = null;
-//   // public buildPeriod: number = null;
-//   // public workshopId: number = null;
-//   // public engineId: number = null;
-//   public measureCondition: string = null;
-//   public reason: string = null;
-//   public existXO = false;
-//   public calcLog1: string = null;
-//   public calcLog2: string = null;
-//   public calcLog3: string = null;
-//   public calcLog4: string = null;
-//   public calcLog5: string = null;
-//   public methodGH: number;
-//   public a: number;
-//   public da: number;
-//   public b: number;
-//   public db: number;
-//   public aSignificant: boolean;
-//   public isLinear: boolean;
-//   public syx2: number;
-//   public sb: number;
-//   public sa: number;
-//   public tA: number;
-//   public tT: number;
-//   public s2Cp: number;
-//   public svnPar2: number;
-//   public f: number;
-//   public ft: number;
-//   public qy0: number;
-//   public qy1: number;
-//   public qX0: number;
-//   public qX1: number;
-//   public sj2: number;
-//   public sp2: number;
-//   public xcp5: number;
-//   public ycp5: number;
-//   public drpMax: number;
-//   // public controlPeriodValue: number = null;
-//   // public controlPeriod: number = null;
-//   public rxy: number;
-// //   public definitionResults: DefinitionResult[] = [];
-// //   public topDefinitionResults: TopDefinitionResult[] = [];
-// //   public calculationResults: CalculationResult[] = [];
-// //   public ghConsts: GHConst[] = [];
-}
+  
 declare interface DateConstructor {
-     fromString(date: string): Date;
+    fromString(date: string): Date;
 }
 declare namespace Session {
     /**

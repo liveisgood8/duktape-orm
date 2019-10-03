@@ -3,7 +3,7 @@ import {ColumnInfo} from "./ColumnInfo";
 
 export interface EntityColumnsInfo {
     taget: Function,
-    property: string | symbol,
+    property: string,
     columnDefinition: ColumnInfo,
 }
 
