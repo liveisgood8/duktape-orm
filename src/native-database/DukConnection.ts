@@ -1,3 +1,4 @@
+/// <reference path="../dukmodules.d.ts"/>
 import { IExecutor } from "./IExecutor"
 
 
