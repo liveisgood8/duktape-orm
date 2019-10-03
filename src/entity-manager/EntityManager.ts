@@ -1,6 +1,7 @@
 import * as GlobalStorage from "../storages/GlobalStorage";
 import * as SqlGenerator from "../query-builder/SqlBuilder";
 import { EntityInfo, EntityColumnsInfo } from "../entities/EntityInfo";
+import { DukConnection } from "../native-database/DukConnection";
 
 
 export class EntityManager<T> {
@@ -27,8 +28,9 @@ export class EntityManager<T> {
         return this;
     }
 
-    select(whereCallback?: Function): void {
+    select(whereCallback?: (obj: T) => void): Array<T> | null {
         let whereLimitation = "";
+        let args = new Array<any>();
         if (whereCallback) {
             let obj = Object.create(this.entityCtor.prototype);
             whereCallback(obj);
@@ -36,27 +38,54 @@ export class EntityManager<T> {
             for (var prop in obj) {
                 let dbColumn = this.entityColumns.filter(e => e.property === prop)[0]; 
                 whereLimitation += `${dbColumn.columnDefinition.name}=?`;
+                args.push(obj[prop]);
             }
         }
         
-        let sql = SqlGenerator.generateSelect(this.entityColumns.map(e => e.columnDefinition.name), 
-                                                this.entityInfo.table, 
-                                                whereLimitation);
+        let selectingColumns = this.entityColumns.map(e => e.columnDefinition.name);
+        let sql = SqlGenerator.generateSelect(selectingColumns, 
+                                            this.entityInfo.table, 
+                                            whereLimitation);
         print(sql);
+        
+        const db = new DukConnection();
+        let result = db.select(sql, args);
+
+        if (result.length === 0) {
+            return null;
+        }
+        else {
+            let objects = new Array<T>();
+            for (let i = 0; i < result.length; i++) {
+                let obj = Object.create(this.entityCtor.prototype);
+
+                if (selectingColumns.length !== result[i].length) {
+                    throw new Error(`Error trying to match query results for: ${sql}`);
+                }
+
+                for (let j = 0; j < result[i].length; j++) {
+                    obj[this.entityColumns[j].property] = result[i][j];
+                }
+
+                objects.push(obj);
+            }
+
+            return objects;
+        }
     }
 
-    insert(obj: T): EntityManager<T> {
-        print("insert");
+    insert(obj: T): boolean {
         let fields = new Array<string>();
+        let args = new Array<any>();
         for (var prop in obj) {
-            print(prop);
             let dbColumn = this.entityColumns.filter(e => e.property === prop)[0];
             fields.push(dbColumn.columnDefinition.name);
+            args.push(obj[prop]);
         }
 
         let sql = SqlGenerator.generateInsert(fields, this.entityInfo.table);
-        print(sql);
 
-        return this;
+        const db = new DukConnection();
+        return db.execute(sql, args);
     }
 }

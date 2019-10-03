@@ -1,5 +1,10 @@
-export function generateSelect(fields: string[], table: string, whereLimitation: string): string {
-    return `select ${fields.join(',')} from ${table} where ${whereLimitation}`;
+export function generateSelect(fields: string[], table: string, whereLimitation?: string): string {
+    let sql = `select ${fields.join(',')} from ${table}`;
+    if (whereLimitation) {
+        sql += ` where ${whereLimitation}`;
+    }
+
+    return sql;
 }
 
 export function generateInsert(fields: string[], table: string): string {

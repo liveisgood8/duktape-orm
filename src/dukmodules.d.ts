@@ -66,7 +66,7 @@ declare module "Parser/Libs/GuiModule.dll" {
 }
 declare class Query {
     constructor(query: string);
-    exec(): void;
+    exec(): boolean;
     open(): void;
     next(): void;
     close(): void;
@@ -113,6 +113,12 @@ declare class Query {
     //#endregion
     // #region set
     /**
+     * Установка любого по типу параметра
+     * @param index Номер поля
+     * @param value Значение поля
+     */
+    setParam(index: number, value: any): boolean;
+    /**
      * Установка целочисленного параметра
      * @param index Номер поля
      * @param value Значение поля
@@ -147,7 +153,7 @@ declare class Query {
 declare namespace MsgBox {
     function show(text: string, title: string): void;
 }
-declare function print(value: any): void;
+declare function print(...value: any): void;
 declare interface CR {
     num_rec: number;
     num_lab: number;
