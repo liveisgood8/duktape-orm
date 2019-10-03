@@ -10,13 +10,11 @@ export class EntityManager<T> {
     private entityInfo: EntityInfo;
     private entityColumns: EntityColumnsInfo[];
 
-    constructor(entityConstructor?: new () => T) {
-        if (entityConstructor) {
-            this.setEntity(entityConstructor);
-        }
+    constructor(entityConstructor: new () => T) {
+        this.setEntity(entityConstructor);
     }
 
-    setEntity(entityConstructor: Function): EntityManager<T> {
+    private setEntity(entityConstructor: Function): EntityManager<T> {
         this.entityCtor = entityConstructor;
 
         this.entityInfo = GlobalStorage.getEntityStorage().filter(e => e.target === entityConstructor)[0];
