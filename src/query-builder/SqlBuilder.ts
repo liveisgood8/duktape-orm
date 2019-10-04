@@ -1,5 +1,7 @@
 export function generateSelect(fields: string[], table: string, whereLimitation?: string): string {
-    let sql = `select ${fields.join(',')} from ${table}`;
+    fields = shieldFields(fields);
+
+    let sql = `select ${fields.join(',')} from [${table}]`;
     if (whereLimitation) {
         sql += ` where ${whereLimitation}`;
     }
@@ -8,11 +10,16 @@ export function generateSelect(fields: string[], table: string, whereLimitation?
 }
 
 export function generateInsert(fields: string[], table: string): string {
-    return `insert into ${table} (${fields.join(',')}) values (${createPlaceholders(fields.length)})`;
+    fields = shieldFields(fields);
+    return `insert into [${table}] (${fields.join(',')}) values (${createPlaceholders(fields.length)})`;
 }
 
 export function generateCheckExist(table: string, whereLimitation: string) {
-    return `select count(*) from ${table} where ${whereLimitation}`;
+    return `select count(*) from [${table}] where ${whereLimitation}`;
+}
+
+function shieldFields(fields: string[]): string[] {
+    return fields.map(e => `[${e}]`);
 }
 
 /**

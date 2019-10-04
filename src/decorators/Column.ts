@@ -11,6 +11,7 @@ export function Column(columnDefinition?: ColumnInfo) {
         if (!columnDefinition || (columnDefinition && !columnDefinition.name)) {
             columnDefinition = {} as ColumnInfo;
             columnDefinition.name = property;
+            columnDefinition.type = ColumnsType.Data;
         }
         
         getColumnsStorage().push({taget: target.constructor, 
