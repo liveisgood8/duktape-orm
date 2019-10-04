@@ -184,3 +184,12 @@ declare namespace Session {
      */
     function userId(): number;
 }
+
+declare namespace Db {
+    function isOracle(): boolean;
+    function isMssql(): boolean;
+    function isAccess(): boolean;
+}
+
+declare function log(text: string): void;
+declare function sleep(milliseconds: number): void;

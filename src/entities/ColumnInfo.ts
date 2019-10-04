@@ -6,8 +6,17 @@ export enum ColumnsType {
     Relation
 }
 
+export enum Flags {
+    ForceUpdate = 1
+}
+
 export interface ColumnInfo {
     name: string,
     type?: ColumnsType,
-    length?: number
+    length?: number,
+    flags?: number
+}
+
+export function checkFlag(flag: Flags, object: ColumnInfo) {
+    return (object.flags & flag) === flag; 
 }

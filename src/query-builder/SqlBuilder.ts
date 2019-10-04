@@ -2,8 +2,9 @@ export function generateSelect(fields: string[], table: string, whereStatements?
     fields = shieldFields(fields);
 
     let sql = `select ${fields.join(',')} from [${table}]`;
-    if (whereStatements && whereStatements.length) {
-        sql += ` where ${whereStatements.join(" AND ")}`;
+    let whereString = makeWhereString(whereStatements);
+    if (whereString) {
+        sql += whereString;
     }
 
     return sql;
@@ -14,14 +15,25 @@ export function generateInsert(fields: string[], table: string): string {
     return `insert into [${table}] (${fields.join(',')}) values (${createPlaceholders(fields.length)})`;
 }
 
+export function generateUpdate(fields: string[], table: string, whereStatements?: string[]) {
+    let sql = `update [${table}] set ${fields.map(e => `[${e}]=?`).join(',')}`;
+    let whereString = makeWhereString(whereStatements);
+    if (whereString) {
+        sql += whereString;
+    }
+
+    return sql;
+}
+
 export function generateCheckExist(table: string, whereStatements: string[]) {
     return `select count(*) from [${table}] where ${whereStatements.join(" AND ")}`;
 }
 
 export function generateMax(column: string, table:string, whereStatements?: string[]) {
     let sql = `select max(${column}) from [${table}]`;
-    if (whereStatements && whereStatements.length) {
-        sql += ` where ${whereStatements.join(" AND ")}`;
+    let whereString = makeWhereString(whereStatements);
+    if (whereString) {
+        sql += whereString;
     }
 
     return sql;
@@ -29,6 +41,14 @@ export function generateMax(column: string, table:string, whereStatements?: stri
 
 function shieldFields(fields: string[]): string[] {
     return fields.map(e => `[${e}]`);
+}
+
+function makeWhereString(whereStatements?: string[]) {
+    if (whereStatements && whereStatements.length) {
+        return ` where ${whereStatements.join(" AND ")}`;
+    }
+
+    return null;
 }
 
 /**

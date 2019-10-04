@@ -118,8 +118,8 @@ export class EntityManager<T> {
     insert(obj: T): boolean {
         const db = new DukConnection();
 
-        let fields = [];
-        let args = [];
+        let fields: string[] = [];
+        let args: any[] = [];
         for (var prop in obj) {
             let dbColumn = this.entityColumns.filter(e => e.property === prop)[0];
             if (!dbColumn) {
@@ -151,8 +151,48 @@ export class EntityManager<T> {
         }
 
         let sql = SqlGenerator.generateInsert(fields, this.entityInfo.table);
-
         return db.execute(sql, args);
+    }
+
+    /**
+     * Update some row in database using data of obj (skip pk values and other system props)
+     * @param obj Object which store updating data
+     * @param whereCallback Callback for setup limitations
+     */
+    update(obj: any, whereCallback?: (obj: T) => void): boolean {
+        let fields: string[] = [];
+        let args: any[] = [];
+
+        for (var prop in obj) {
+            let dbColumn = this.entityColumns.filter(e => e.property === prop)[0];
+            if (!dbColumn) {
+                throw new Error(`Property '${prop}' not founded in model: ${this.entityCtor}`)
+            }
+
+            if (dbColumn.columnDefinition.type === ColumnsType.Data
+                || dbColumn.columnDefinition.type === ColumnsType.ManualIncrement) {
+                fields.push(dbColumn.columnDefinition.name);
+                args.push(obj[prop]);
+            }
+        }
+
+        let whereStatements: string[] = [];
+        if (whereCallback) {
+            let obj = Object.create(this.entityCtor.prototype);
+            whereCallback(obj);
+
+            for (var prop in obj) {
+                let dbColumn = this.entityColumns.filter(e => e.property === prop)[0];
+                if (!dbColumn) {
+                    throw new Error(`Property '${prop}' not founded in model: ${this.entityCtor}`)
+                }
+                whereStatements.push(`[${dbColumn.columnDefinition.name}]=?`);
+                args.push(obj[prop]);
+            }
+        }
+
+        let sql = SqlGenerator.generateUpdate(fields, this.entityInfo.table, whereStatements);
+        return new DukConnection().execute(sql, args);
     }
 
     isExist(obj: any): boolean {
