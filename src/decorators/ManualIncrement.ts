@@ -2,16 +2,16 @@ import { getColumnsStorage } from "../storages/GlobalStorage";
 import { ColumnInfo, ColumnsType } from "../entities/ColumnInfo";
 
 
-export function Column(columnDefinition?: ColumnInfo) {
-    if (columnDefinition && !columnDefinition.type) {
-        columnDefinition.type = ColumnsType.Data;
+export function ManualIncrement(columnDefinition?: ColumnInfo) {
+    if (columnDefinition) {
+        columnDefinition.type = ColumnsType.ManualIncrement;
     }
     
     function decorator(target: Object, property: string): void {
         if (!columnDefinition || (columnDefinition && !columnDefinition.name)) {
             columnDefinition = {} as ColumnInfo;
             columnDefinition.name = property;
-            columnDefinition.type = ColumnsType.Data;
+            columnDefinition.type = ColumnsType.ManualIncrement;
         }
         
         getColumnsStorage().push({taget: target.constructor, 
