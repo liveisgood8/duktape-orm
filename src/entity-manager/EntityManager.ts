@@ -205,7 +205,7 @@ export class EntityManager<T> {
                 throw new Error(`Property '${prop}' not founded in model: ${this.entityCtor}`)
             }
 
-            whereStatements.push(`[${dbColumn.columnDefinition.name}=?]`);
+            whereStatements.push(`[${dbColumn.columnDefinition.name}]=?`);
             fields.push(dbColumn.columnDefinition.name);
             args.push(obj[prop]);
         }
