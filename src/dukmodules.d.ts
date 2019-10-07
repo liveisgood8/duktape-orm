@@ -189,6 +189,7 @@ declare namespace Db {
     function isOracle(): boolean;
     function isMssql(): boolean;
     function isAccess(): boolean;
+    function isTableExist(name: string): boolean;
 }
 
 declare function log(text: string): void;
